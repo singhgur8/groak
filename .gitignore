@@ -1,0 +1,11 @@
+# comes from pkg.json
+node_modules
+
+# comes from pkg.json
+package-lock.json
+
+#keys
+config.js
+
+#I dont want to share the bundle, its created when webpack in run
+bundle.js
