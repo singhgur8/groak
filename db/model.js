@@ -18,12 +18,11 @@ mongoose.Promise = global.Promise;
 
 
 // Schemas for Collection of Users
-const recentFoodSchema = new mongoose.Schema({ dishName = String });
-const friendSchema = new mongoose.Schema({ friendName = String });
+const friendSchema = new mongoose.Schema({ friendName : String });
 const dishSchema = new mongoose.Schema({
   cuisine: String,
   dishName: String
-})
+}, {strict: false})
 
 const userSchema = new mongoose.Schema({
   name: String,
@@ -34,7 +33,7 @@ const userSchema = new mongoose.Schema({
   preference: dishSchema,
   recentFoods: [dishSchema],
   recentFood: dishSchema
-})
+}, {strict: false})
 
 // Schema for Collection of Existing Cusines and Dishes
 // just reuse the schema made for dishschema
