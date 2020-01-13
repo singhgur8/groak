@@ -16,6 +16,19 @@ class App extends React.Component {
   }
 
   componentDidMount() {
+    var sucesscb = (data) => {
+      axios.post('/coordinates', {
+        latitude: data.coords.latitude,
+        longitude: data.coords.longitude
+      })
+    }
+
+    var errorcb = (err)=>{
+      console.log(err)
+    }
+
+    navigator.geolocation.getCurrentPosition(sucesscb, errorcb)
+
     // let endpoint;
     // if (window.location.pathname === '/') {
     //   endpoint = 1;
@@ -49,6 +62,11 @@ class App extends React.Component {
 
   handleSubmit(e){
     e.preventDefault()
+
+    // since technically I cant send data to  server via data obj, it might more sense to post
+    // and the make a get req
+
+
     console.log('Form was submitted', e.target)
     // if Add guest is clicked then it should pop up a modal which lets us create a eater
     // if add user if clicked then it should do what it says
@@ -57,6 +75,11 @@ class App extends React.Component {
         guestStatement: true
       }
     })
+
+    axios.post('/restaurant', {
+      // send the data of the selected users
+    })
+
   }
 
   render() {
@@ -87,7 +110,7 @@ class App extends React.Component {
       {/* conditional rendering happening inside each child component */} 
         {/* Search Bar */}
         <div>
-          <Search></Search>
+          {/* <Search></Search> */}
           <AddGuest onClick={this.handleSubmit} show={this.state.show}/>
         </div>
       
