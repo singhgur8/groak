@@ -1,3 +1,3 @@
 module.exports = {
-    yelpKey = "YOUR_KEY_HERE"
+    yelpKey = "Bearer YOUR_KEY_HERE"
 }

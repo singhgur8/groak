@@ -3,12 +3,13 @@ var currentClientCoordinates;
 
 
 // Make practice API calls to yelp here
-// I have to get the geo location on the client end
-// becasue navigator is accessible by the browser, not node, unless maybe if
-// i install an api for it...but then whenever the function would run
-// it would get the location of the server not the client.
+    // see what the API call should look like, like how is the filter going to work
+    // what am I filter by??
+    // by location, default radius, default price range, default star ratings
+    // main filter will be by cusine, if i can or by food type that my algorithm decides on
+    // my algorithm will decide based on overlapping and weights of people preferences
 
-// update the coordinates upon post req from  client
+// update the coordinates upon post req from  client. will be prompted on page load
 
 module.exports = {
     getData: function getAllDataFromDb(id, res) {
@@ -20,8 +21,21 @@ module.exports = {
         },
     setLocation: function(req,res) {
         currentClientCoordinates = req.body
-        res.send();
-    } 
+        res.send(currentClientCoordinates);
+    },
+    addFriend: function(req, res) {
+        res.send()
+    },
+    createFriend: function(req, res) {
+        res.send()
+    },
+    getRestaurant: function(req, res) {
+        res.send()
+    },
+
         
 
 }
+
+
+

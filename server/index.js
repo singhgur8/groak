@@ -21,14 +21,16 @@ app.post('/coordinates', (req, res) => {
 })
 
 app.post('/addFriend', (req,res) => {
-  controller.addFriend
+  controller.addFriend(req,res)
 })
 
 app.post('createFriend', (req,res) => {
-
+  controller.createFriend(req,res)
 })
 
-app.get('/restaurant')
+app.get('/restaurant', (req,res)=>{
+  controller.getRestaurant(req,res)
+})
 
 app.listen(port, () => {
   console.log(`listening at port !!! ${port}`);

@@ -2,6 +2,8 @@ import React from 'react';
 import axios from 'axios';
 import styles from './styles/app.css';
 import AddGuest from './AddGuest.jsx'
+import Search from './Search.jsx'
+
 
 class App extends React.Component {
   constructor() {
@@ -10,8 +12,13 @@ class App extends React.Component {
       show: {
         guestStatement: false,
       },
+      value: 'coconut'
     };
-    this.changePage = this.changePage.bind(this);
+
+    this.addEater = this.addEater.bind(this);
+    this.addGuest = this.addGuest.bind(this);
+    this.findRestaurant = this.findRestaurant.bind(this)
+    this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
@@ -21,6 +28,8 @@ class App extends React.Component {
         latitude: data.coords.latitude,
         longitude: data.coords.longitude
       })
+      .then(data => console.log('posted coordinates are', data.data))
+      .catch(err => console.log('failed post req for coordinates', err))
     }
 
     var errorcb = (err)=>{
@@ -28,69 +37,58 @@ class App extends React.Component {
     }
 
     navigator.geolocation.getCurrentPosition(sucesscb, errorcb)
-
-    // let endpoint;
-    // if (window.location.pathname === '/') {
-    //   endpoint = 1;
-    // } else {
-    //   endpoint = window.location.pathname.split('/')[1];
-    // }
-    // axios.get(`http://localhost:3004/airbnb/listings/${endpoint}`)
-    //   .then((data) => {
-    //     this.setState({
-    //       photos: data.data,
-    //     });
-    //   });
   }
 
-  changePage(e) {
-    // let photoNumber; // lets me use the same click function on different DOM element types
-    // if (e.target.nodeName === 'DIV') {
-    //   photoNumber = Number(e.target.className.split(' ')[0]);
-    // } else {
-    //   photoNumber = 0;
-    // }
 
-    // const { show } = this.state;
-    // this.setState({
-    //   show: {
-    //     gallery: !show.gallery,
-    //     photo: photoNumber,
-    //   },
-    // });
-  }
 
-  handleSubmit(e){
+  addGuest(e){
     e.preventDefault()
+    console.log('Adding a guest')
+    // opens a modal that lets you input information for guest
+    // needs a close button and a createEater button
+  }
 
-    // since technically I cant send data to  server via data obj, it might more sense to post
-    // and the make a get req
+  // add eater submit
+  addEater(username){
+    console.log('Adding a Eater', username)
 
+    // this needs to get whatever is put into the form
 
-    console.log('Form was submitted', e.target)
-    // if Add guest is clicked then it should pop up a modal which lets us create a eater
-    // if add user if clicked then it should do what it says
+    // run this if the add eater fails
     this.setState({
       show: {
         guestStatement: true
       }
     })
-
-    axios.post('/restaurant', {
-      // send the data of the selected users
-    })
-
   }
 
+  // find restaurant
+  findRestaurant(e){
+    e.preventDefault();
+    axios.get('/restaurant', {
+
+    })
+  }
+
+  handleChange(event) {
+    this.setState({value: event.target.value});
+  }
+
+  handleSubmit(event) {
+    alert('Your favorite flavor is: ' + this.state.value);
+    event.preventDefault();
+  }
+
+
   render() {
-    // Stops scrolling of the page if Modal opens up
-    const { show, photos } = this.state;
-    const objRef = document.body;
-    if (!show.gallery) {
-      objRef.style['overflow-y'] = 'hidden';
-    } else {
-      objRef.style['overflow-y'] = 'auto';
-    }
+    const { show } = this.state;
+    // // Stops scrolling of the page if Modal opens up
+    // const objRef = document.body;
+    // if (!show.gallery) {
+    //   objRef.style['overflow-y'] = 'hidden';
+    // } else {
+    //   objRef.style['overflow-y'] = 'auto';
+    // }
 
     return (
       <div>
@@ -107,13 +105,24 @@ class App extends React.Component {
           <button>Sign In</button>
         </div>
 
-      {/* conditional rendering happening inside each child component */} 
         {/* Search Bar */}
         <div>
-          {/* <Search></Search> */}
-          <AddGuest onClick={this.handleSubmit} show={this.state.show}/>
+          <Search addEater={this.addEater}></Search>
         </div>
-      
+
+        <div>
+          <AddGuest addGuest={this.addGuest} show={this.state.show}/>
+        </div>
+
+        <div>
+          {/* add a Selection Summary Component here */}
+        </div>
+
+        {/* This could be conditionally rendered once the search is hit */}
+        <div>
+          {/* Suggested Restaurant */}
+        </div>
+
       </div>
     )
 
