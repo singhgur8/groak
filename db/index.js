@@ -16,15 +16,30 @@ connectWithRetry();
 
 mongoose.Promise = global.Promise;
 
-// generic subdoc, becasue we do not know how many subdocs there will be
-const urlSchema = new mongoose.Schema({ url: String });
 
-const listingSchema = new mongoose.Schema({
+// Schemas for Collection of Users
+const recentFoodSchema = new mongoose.Schema({ dishName = String });
+const friendSchema = new mongoose.Schema({ friendName = String });
+const dishSchema = new mongoose.Schema({
+  cuisine: String,
+  dishName: String
+})
+
+const userSchema = new mongoose.Schema({
   name: String,
-  urls: [urlSchema],
-  url: urlSchema,
-});
+  email: String,
+  friends: [friendSchema],
+  friend: friendSchema,
+  preferences: [dishSchema],
+  preference: dishSchema,
+  recentFoods: [dishSchema],
+  recentFood: dishSchema
+})
 
-const Listing = mongoose.model('Listing', listingSchema);
+// Schema for Collection of Existing Cusines and Dishes
+// just reuse the schema made for dishschema
 
-module.exports.Listing = Listing;
+module.exports = {
+  Dishes: mongoose.model('Dishes', dishSchema),
+  Users: mongoose.model('Users', userSchema)
+}

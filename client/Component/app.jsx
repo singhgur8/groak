@@ -87,13 +87,8 @@ class App extends React.Component {
       {/* conditional rendering happening inside each child component */} 
         {/* Search Bar */}
         <div>
-
-          <form onSubmit={this.handleSubmit} name="addEater">
-            <input type="text"/>
-            <input type="submit" value="Add Eater"/>
-          </form>
+          <Search></Search>
           <AddGuest onClick={this.handleSubmit} show={this.state.show}/>
-
         </div>
       
       </div>

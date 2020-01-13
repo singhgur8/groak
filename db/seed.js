@@ -1,5 +1,21 @@
-const db = require('../db/index.js');
+const {Dishes , Users} = require('../db/index.js');
 const mongoose = require('mongoose');
+
+const usersList = [
+  'Gurjot Singh',
+  'Sona Singh',
+  'Strider Wilson',
+  'Kelly Willard',
+  'Nick Holke'
+];
+
+
+// For my seed script I should make 5 users
+  // i should just u
+
+
+
+
 
 // Clean collection Before Seeding
 db.Listing.remove({}, () => {

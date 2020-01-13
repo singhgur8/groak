@@ -56,6 +56,12 @@
     "express": "^4.17.1",
     "mongoose": "^5.7.13",
     "react": "^16.12.0",
-    "react-dom": "^16.12.0"
+    "react-dom": "^16.12.0",
+    "@bit/primefaces.primereact.autocomplete": "file:./components/autocomplete"
+  },
+  "bit": {
+    "env": {},
+    "componentsDefaultDirectory": "components/{name}",
+    "packageManager": "npm"
   }
 }
