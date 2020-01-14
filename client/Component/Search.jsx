@@ -13,7 +13,6 @@ class Search extends React.Component{
     callbackForAddEater(e){
         const { addEater } = this.props
         e.preventDefault();
-        console.log(this.state)
         addEater(this.state.selectValue);
         // clears the search after submission
         this.setState({

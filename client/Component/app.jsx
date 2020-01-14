@@ -81,7 +81,6 @@ class App extends React.Component {
   }
 
   addEater(username){
-    console.log('Adding a Eater', username)
     if (username === null || username === undefined) {
       this.setState({
         show: {
@@ -99,10 +98,6 @@ class App extends React.Component {
           selectedFriends: selectedFriends
         });
       }) 
-      //update the state so the username  also appears in in the next component
-      // for the selected friends i should add a disable true property to the friends list
-      // might as well update both states together
-
   }
 
   findRestaurant(e){
@@ -137,7 +132,7 @@ class App extends React.Component {
         <Grid
           justify = 'center'
           justifyContent = 'center'
-          rows={['xxsmall', 'xxsmall', 'xxsmall', 'small']  }
+          rows={['xxsmall', 'xxsmall', 'xxsmall', 'xxsmall', 'medium']  }
           columns={['medium', 'small']}
           gap="xxsmall"
           areas={[
@@ -145,6 +140,7 @@ class App extends React.Component {
             { name: 'nav', start: [0, 1], end: [1, 1] },
             { name: 'search', start: [0, 2], end: [1, 2] },
             { name: 'addGuest', start: [0, 3], end: [1, 3] },
+            { name: 'summary', start: [0, 4], end: [1, 4] },
           ]}
         >
           <Box gridArea='header'>
@@ -174,14 +170,16 @@ class App extends React.Component {
             </div>
           </Box>
 
+          <Box gridArea='summary'>
+              <div>
+                <Summary selectedFriends={this.state.selectedFriends} />
+              </div>
+          </Box>
+
         </Grid>
 
 
-        <div>
-          {/* add a Selection Summary Component here */}
-          <Summary selectedFriends={this.state.selectedFriends} />
-          <RangeInput/>
-        </div>
+        
 
         <div>
           <button>
