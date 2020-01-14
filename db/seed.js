@@ -76,7 +76,8 @@ for (var i = 0; i < usersList.length; i++) {
   var user = {}
   user.name = usersList[i].toLowerCase();
   user.email = usersList[i].toLowerCase().split(" ").join("") + '@gmail.com';
-  user.friends = usersList;
+  user.friends = usersList.slice()
+  user.friends.splice(i,1);
   user.preferences = [];
   var randomNumber = Math.floor(Math.random()*3 + 1)
   // every use will have a random number of favorite dishes from 1-3
