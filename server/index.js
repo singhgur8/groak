@@ -24,11 +24,11 @@ app.post('/addEater', (req,res) => {
   controller.addEater(req,res)
 })
 
-app.post('createFriend', (req,res) => {
+app.post('/createFriend', (req,res) => {
   controller.createFriend(req,res)
 })
 
-app.get('/restaurant', (req,res)=>{
+app.get('/api/getRestaurant', (req,res) => {
   controller.getRestaurant(req,res)
 })
 

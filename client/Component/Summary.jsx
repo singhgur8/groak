@@ -8,10 +8,10 @@ function Summary(props){
         <div>
                 <Grid
                     rows={['medium']}
-                    columns={['medium', 'medium']}
+                    columns={['medium', 'xxsmall']}
                     gap="xxsmall"
                     areas={[
-                    { name: 'summary', start: [0, 0], end: [0, 0] },
+                    { name: 'summary', start: [0, 0], end: [1, 0] },
                     { name: 'range', start: [1, 0], end: [1, 0] },
                     ]}
                 >

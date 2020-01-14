@@ -16,6 +16,7 @@ class App extends React.Component {
       show: {
         guestStatement: false,
       },
+      notLoggedIn: false,
       friends: [],
       selectedFriends: [],
     };
@@ -44,10 +45,6 @@ class App extends React.Component {
 
     navigator.geolocation.getCurrentPosition(sucesscb, errorcb)
 
-    // also when this loads, it shoudl send over all of the details andfriends of the current 
-    // user over search bar. The list of options eventually needs to be an array of objects
-    // with label and value keys, whenever someone is selected, disabled gets turned on
-    // this data processing will have to happen somewhere. better to do it on server end
 
     // based on endpoint, it can be a show of who is logged in right now.
     // defaults to me
@@ -61,13 +58,28 @@ class App extends React.Component {
     var username = user.slice(1,user.length-1).split("_").join(" ")
     this.setState({username})
 
+    // user will eat as well so add them
+    axios.post('/addEater', {username: username})
+      .then(() => {
+        const selectedFriends = this.state.selectedFriends.slice();
+        selectedFriends.push(username)
+        this.setState({
+          selectedFriends: selectedFriends
+        });
+    }) 
+
     axios.get(`${user}friends`)
     .then((data) => {
       this.setState({
         friends: data.data.friends
       })
     })
-    .catch()
+    .catch(err=>{
+      this.setState({
+        notLoggedIn: true
+      })
+
+    })
 
   }
 
@@ -88,7 +100,6 @@ class App extends React.Component {
         }
       })
     }
-
       axios.post('/addEater', {username: username.label})
       .then(() => {
         // push user into selected friends array
@@ -102,9 +113,12 @@ class App extends React.Component {
 
   findRestaurant(e){
     e.preventDefault();
-    axios.get('/restaurant', {
-
+    axios.get(`/api/getRestaurant`)
+    .then((data) => {
     })
+    .catch()
+    // all of the friends should already be in the server side. so just make the req
+
     // This should also display why this restaurant was chosen, like what was
     // the filter based on. Most people want:
   }
@@ -118,86 +132,93 @@ class App extends React.Component {
 
 
   render() {
-    const { show } = this.state;
-    // // Stops scrolling of the page if Modal opens up
-    // const objRef = document.body;
-    // if (!show.gallery) {
-    //   objRef.style['overflow-y'] = 'hidden';
-    // } else {
-    //   objRef.style['overflow-y'] = 'auto';
-    // }
+    const { notLoggedIn } = this.state;
 
-    return (
-      <div className='container'>
-        <Grid
-          justify = 'center'
-          justifyContent = 'center'
-          rows={['xxsmall', 'xxsmall', 'xxsmall', 'xxsmall', 'medium']  }
-          columns={['medium', 'small']}
-          gap="xxsmall"
-          areas={[
-            { name: 'header', start: [0, 0], end: [1, 0] },
-            { name: 'nav', start: [0, 1], end: [1, 1] },
-            { name: 'search', start: [0, 2], end: [1, 2] },
-            { name: 'addGuest', start: [0, 3], end: [1, 3] },
-            { name: 'summary', start: [0, 4], end: [1, 4] },
-          ]}
-        >
-          <Box gridArea='header'>
-            <div>
-              <h1>GROAK</h1>
-              <p>Enchancing your food searching experience since 2020!</p>
-            </div>
-          </Box>
-
-          <Box gridArea='nav'>
-            <div>
-              <button><Home size='small'></Home></button>
-              <button><Help size='small'></Help></button>
-              <button><User size='small'></User> {this.state.username}</button>
-            </div>
-          </Box>
-{/* the add button is inside this so i have to make a grid inside this as well */}
-          <Box gridArea='search'>
-            <div>
-              <Search addEater={this.addEater} friends={this.state.friends} selectedFriends={this.state.selectedFriends}></Search>
-            </div>
-          </Box>
-
-          <Box gridArea='addGuest'>
-            <div>
-              <AddGuest addGuest={this.addGuest} show={this.state.show}/>
-            </div>
-          </Box>
-
-          <Box gridArea='summary'>
+    if (notLoggedIn) {
+      return (
+        <div>
+          User Not Found, Please Log In -- Implement Authentication [TO DO]
+        </div>
+      )
+    } else {
+      return (
+        <div className='container'>
+          <Clock type='digital'></Clock>
+          <Grid
+            justify = 'center'
+            justifyContent = 'center'
+            rows={['xxsmall', 'xxsmall', 'xxsmall', 'xxsmall', 'medium', 'small']  }
+            columns={['medium', 'small']}
+            gap="xxsmall"
+            areas={[
+              { name: 'header', start: [0, 0], end: [1, 0] },
+              { name: 'nav', start: [0, 1], end: [1, 1] },
+              { name: 'search', start: [0, 2], end: [1, 2] },
+              { name: 'addGuest', start: [0, 3], end: [1, 3] },
+              { name: 'summary', start: [0, 4], end: [1, 4] },
+              { name: 'findRes', start: [0, 5], end: [1, 5] },
+            ]}
+          >
+            <Box gridArea='header'>
               <div>
-                <Summary selectedFriends={this.state.selectedFriends} />
+                <h1>GROAK</h1>
+                <p>Enchancing your food searching experience since 2020!</p>
               </div>
-          </Box>
+            </Box>
+  
+            <Box gridArea='nav'>
+              <div>
+                <button><Home size='small'></Home></button>
+                <button><Help size='small'></Help></button>
+                <button><User size='small'></User> {this.state.username}</button>
+              </div>
+            </Box>
 
-        </Grid>
+            <Box gridArea='search'>
+              <div>
+                <Search addEater={this.addEater} friends={this.state.friends} selectedFriends={this.state.selectedFriends}></Search>
+              </div>
+            </Box>
+  
+            <Box gridArea='addGuest'>
+              <div>
+                <AddGuest addGuest={this.addGuest} show={this.state.show}/>
+              </div>
+            </Box>
+  
+            <Box gridArea='summary'>
+                <div>
+                  <Summary selectedFriends={this.state.selectedFriends} />
+                </div>
+            </Box>
+  
+            <Box gridArea='findRes'>
+              <button onClick={this.findRestaurant}>
+                <div>Find Restaurant!</div>
+                <FormSearch></FormSearch>
+              </button>
+            </Box>
 
-
-        
-
-        <div>
-          <button>
-            <div>Find Restaurant!</div>
-            <FormSearch></FormSearch>
-          </button>
+          </Grid>
+  
+          
+  
+          
+  
+  
+          {/* This could be conditionally rendered once the search is hit */}
+          <div>
+            {/* Suggested Restaurant */}
+            RESULTS:
+          </div>
+  
+  
         </div>
+      )
 
-        {/* This could be conditionally rendered once the search is hit */}
-        <div>
-          {/* Suggested Restaurant */}
-          RESULTS:
-        </div>
+    }
 
-        <Clock type='digital'></Clock>
-
-      </div>
-    )
+    
   }
 }
 

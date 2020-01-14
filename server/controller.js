@@ -1,6 +1,9 @@
 const {Users, Dishes} = require('../db/model.js');
+const {findCommonFood} = require('./logic.js')
 var currentClientCoordinates;
 var eatersList = [];
+var eatersInfoPromises = [];
+var eatersInfo = [];
 
 // Make practice API calls to yelp here
     // see what the API call should look like, like how is the filter going to work
@@ -14,40 +17,43 @@ var eatersList = [];
 
 
 module.exports = {
-    getData: function getAllDataFromDb(id, res) {
-        db.Listing.find({})
-          .then((data) => {
-            console.log('THIS IS THE DATA INSIDE OF THE DB IN THE CONTAINER', data);
-            res.send(data[id - 1]);
-          })
-        },
     setLocation: function(req,res) {
         currentClientCoordinates = req.body
         res.send(currentClientCoordinates);
     },
     addEater: function(req, res) {
         eatersList.push(req.body.username)
-        console.log('in controller', eatersList)
         res.send()
     },
     createFriend: function(req, res) {
         res.send()
     },
     getRestaurant: function(req, res) {
+        for (var i = 0; i < eatersList.length; i++) {
+
+            // create new array of all the users info
+            var promise = Users.findOne({ name: eatersList[i].toLowerCase()}).exec()
+            eatersInfoPromises.push(promise)
+        }
+        // console.log(eatersInfoPromises)
+        Promise.all(eatersInfoPromises)
+        .then((data) => {
+            // console.log('DATA FROM ALL PROMISEs', data)
+            var cuisineDish = findCommonFood(data); // some array of two, first the cuisine and then the dish
+        })
+            // to make a yelp api call and return the first retaurant it finds
+
         res.send()
     },
     getUserInfo: function(req,res) {
-        // user is req.params.user.split("_").join(" ")
         let name = req.params.user.split("_").join(" ")
-        console.log(name)
         Users.findOne({ name: name})
         .then((data) => {
-            // console.log(data)
-            // right now the friends list has every one but we dont want the user
-            // that made the request, meaning i didnt seed right....
-
-
-            res.send(data);
+            if (data === null) {
+                res.status(400).send();
+            } else {
+                res.send(data);
+            }
         })
     }
         

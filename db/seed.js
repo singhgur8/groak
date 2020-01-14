@@ -23,7 +23,7 @@ const cuisineDishList = [
   {cuisine: 'Greek', dish:'Pita'},
   {cuisine: 'American', dish:'Meat Balls'},
   {cuisine: 'Vegan', dish:'Pizza'},
-  {cuisine: 'Indian', dish:'Mexican'},
+  {cuisine: 'Asian', dish:'Mexican'},
   {cuisine: 'American', dish:'Bagel'},
   {cuisine: 'Indian', dish:'Rice'},
   {cuisine: 'Asian', dish:'Rice'},
