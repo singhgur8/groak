@@ -18,7 +18,6 @@ mongoose.Promise = global.Promise;
 
 
 // Schemas for Collection of Users
-const friendSchema = new mongoose.Schema({ friendName : String });
 const dishSchema = new mongoose.Schema({
   cuisine: String,
   dishName: String
@@ -27,8 +26,6 @@ const dishSchema = new mongoose.Schema({
 const userSchema = new mongoose.Schema({
   name: String,
   email: String,
-  friends: [friendSchema],
-  friend: friendSchema,
   preferences: [dishSchema],
   preference: dishSchema,
   recentFoods: [dishSchema],

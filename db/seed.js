@@ -5,19 +5,33 @@ const mongoose = require('mongoose');
 // WARNING: Before I seed I need to match the data in my database to match that of 
 // how yelp references things. There needs to be a standard.
 
-// I might be able to simplify things even more by just
 
-const usersList = [
-  'Gurjot Singh',
-  'Sona Singh',
-  'Strider Wilson',
-  'Kelly Willard',
-  'Nick Holke'
-];
+const usersList = ['Gurjot Singh','Sona Singh','Strider Wilson','Kelly Willard','Nick Holke' ]; 
+// SAVE everyone as lower case so its not case sensitive
 
 const cuisineDishList = [
-  {cuisine: 'Italian',dish:'Pizza'},
+  {cuisine: 'Italian', dish:'Pizza'},
+  {cuisine: 'Indian', dish:'Pizza'},
+  {cuisine: 'American', dish:'Burger'},
+  {cuisine: 'American', dish:'Salad'},
+  {cuisine: 'American', dish:'Beef'},
+  {cuisine: 'Mexican', dish:'Beef'},
+  {cuisine: 'Thai', dish:'Curry'},
+  {cuisine: 'Mexican', dish:'Pizza'},
+  {cuisine: 'Mexican', dish:'Chicken'},
+  {cuisine: 'Asian', dish:'Fusion'},
+  {cuisine: 'Greek', dish:'Pita'},
+  {cuisine: 'American', dish:'Meat Balls'},
+  {cuisine: 'Vegan', dish:'Pizza'},
+  {cuisine: 'Indian', dish:'Mexican'},
+  {cuisine: 'American', dish:'Bagel'},
+  {cuisine: 'Indian', dish:'Rice'},
+  {cuisine: 'Asian', dish:'Rice'},
+  {cuisine: 'Thai', dish:'Pad'},
+  {cuisine: 'African', dish:'All'},
+  {cuisine: 'All', dish:'Sushi'},
 ];
+
 
 restrictionsList = [
   'vegetarian friendly', 'vegan', 'allergies', 'gluten friendly'
@@ -48,22 +62,42 @@ restrictionsList = [
   // its okay if some people have none. just pass in an empty arr
   // have a lot of preference, can be more than number of iterations. so double for loop
   // also recent food could e whatever but wont have mucht weight
-
-
-
+  //lower case save the food as well
 
 
 // Clean collection Before Seeding
-db.Listing.remove({}, () => {
+Users.remove({}, () => {
   console.log('collection was cleared! Will seed now');
 });
 
-// create document and save to data base
-const document = new db.Listing({
-  // name: houseName,
-  // urls: urlArr,
-});
+for (var i = 0; i < usersList.length; i++) {
+  console.log(i)
+  var cache = {}; // tracks dishes already slected so new one every user
+  var user = {}
+  user.name = usersList[i].toLowerCase();
+  user.email = usersList[i].toLowerCase().split(" ").join("") + '@gmail.com';
+  user.friends = usersList;
+  user.preferences = [];
+  var randomNumber = Math.floor(Math.random()*3 + 1)
+  // every use will have a random number of favorite dishes from 1-3
+  for (var j = 0; j < randomNumber; j++){
+    // add a randomly selected dish from dish list, but also cache it so it is not repeated
+    var randomDish = Math.floor(Math.random()*cuisineDishList.length)
+    if (cache[randomDish] !== undefined) {
+      j--
+    } else {
+      cache[randomDish] = 1;
+      user.preferences.push(cuisineDishList[randomDish])
+    }
+  }
 
-document.save(() => {
-  mongoose.connection.close();
-});
+  console.log('Adding the followin user:', user)
+  // create document and save to data base
+  const document = new Users(user);
+
+  document.save((err) => {
+    console.log(err)
+    // mongoose.connection.close(); // shouldnt close connection since I have to use it many times
+  });
+}
+
