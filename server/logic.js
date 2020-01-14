@@ -30,9 +30,6 @@ module.exports = {
                 cuisineDish = k
             }
         }
-        console.log(cache)
-        console.log('QUERY PARAM', cuisineDish)
-
         return cuisineDish;
     }
 }

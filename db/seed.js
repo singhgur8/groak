@@ -13,8 +13,8 @@ const cuisineDishList = [
   {cuisine: 'Italian', dish:'Pizza'},
   {cuisine: 'Indian', dish:'Pizza'},
   {cuisine: 'American', dish:'Burger'},
-  {cuisine: 'American', dish:'Salad'},
-  {cuisine: 'American', dish:'Beef'},
+  {cuisine: 'African', dish:'Salad'},
+  {cuisine: 'Pakistani', dish:'Beef'},
   {cuisine: 'Mexican', dish:'Beef'},
   {cuisine: 'Thai', dish:'Curry'},
   {cuisine: 'Mexican', dish:'Pizza'},
@@ -22,14 +22,14 @@ const cuisineDishList = [
   {cuisine: 'Asian', dish:'Fusion'},
   {cuisine: 'Greek', dish:'Pita'},
   {cuisine: 'American', dish:'Meat Balls'},
-  {cuisine: 'Vegan', dish:'Pizza'},
+  {cuisine: 'Thai', dish:'Pizza'},
   {cuisine: 'Asian', dish:'Mexican'},
-  {cuisine: 'American', dish:'Bagel'},
+  {cuisine: 'Italian', dish:'Bagel'},
   {cuisine: 'Indian', dish:'Rice'},
   {cuisine: 'Asian', dish:'Rice'},
   {cuisine: 'Thai', dish:'Pad'},
   {cuisine: 'African', dish:'All'},
-  {cuisine: 'All', dish:'Sushi'},
+  {cuisine: 'Greek', dish:'Sushi'},
 ];
 
 

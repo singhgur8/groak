@@ -3,8 +3,10 @@ const {findCommonFood} = require('./logic.js')
 var currentClientCoordinates;
 var eatersList = [];
 var eatersInfoPromises = [];
-var eatersInfo = [];
+const axios = require('axios')
+const { yelpKey } = require('../config.js')
 
+axios.defaults.headers.common['Authorization'] = yelpKey;
 // Make practice API calls to yelp here
     // see what the API call should look like, like how is the filter going to work
     // what am I filter by??
@@ -40,10 +42,26 @@ module.exports = {
         .then((data) => {
             // console.log('DATA FROM ALL PROMISEs', data)
             var cuisineDish = findCommonFood(data); // some array of two, first the cuisine and then the dish
-        })
+            // Not getting enough variety of data
+            
             // to make a yelp api call and return the first retaurant it finds
+            const  {latitude, longitude} = currentClientCoordinates
 
-        res.send()
+            axios.get(`https://api.yelp.com/v3/businesses/search?limit=2&latitude=${latitude}&longitude=${longitude}&categories=${cuisineDish}&term=${cuisineDish}`)
+            .then(data => {
+                console.log(cuisineDish, data.data)
+                var obj = {
+                    filter: cuisineDish,
+                    restaurant: data.data.businesses[0]
+                }
+                res.send(200, obj)
+            })
+            .catch(err => {
+                console.log(err)
+                res.status(400).send(err)
+            })
+        })
+
     },
     getUserInfo: function(req,res) {
         let name = req.params.user.split("_").join(" ")

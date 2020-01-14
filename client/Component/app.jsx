@@ -4,8 +4,9 @@ import styles from './styles/app.css';
 import AddGuest from './AddGuest.jsx'
 import Search from './Search.jsx'
 import Summary from './Summary.jsx'
+import Results from './Results.jsx'
 import { Home, User, Help, FormSearch } from 'grommet-icons';
-import { RangeInput, Clock, Grid, Box } from 'grommet'
+import { Clock, Grid, Box } from 'grommet'
 
 
 class App extends React.Component {
@@ -19,14 +20,16 @@ class App extends React.Component {
       notLoggedIn: false,
       friends: [],
       selectedFriends: [],
+      showResults: false,
+      restaurant: {},
+      reasoning: ""
     };
 
 
     this.addEater = this.addEater.bind(this);
     this.addGuest = this.addGuest.bind(this);
     this.findRestaurant = this.findRestaurant.bind(this)
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
+    this.changePage = this.changePage.bind(this)
   }
 
   componentDidMount() {
@@ -83,6 +86,13 @@ class App extends React.Component {
 
   }
 
+  changePage(e){
+    e.preventDefault()
+    this.setState({
+      showResults: false
+    })
+  }
+
 
 
   addGuest(e){
@@ -115,24 +125,23 @@ class App extends React.Component {
     e.preventDefault();
     axios.get(`/api/getRestaurant`)
     .then((data) => {
+      console.log(data.data)
+      // change to show results
+      // pass in the props of restauraant and choice to component
+      this.setState({
+        showResults: true,
+        reasoning: data.data.filter,
+        restaurant: data.data.restaurant
+      })
+
+
     })
     .catch()
-    // all of the friends should already be in the server side. so just make the req
-
-    // This should also display why this restaurant was chosen, like what was
-    // the filter based on. Most people want:
-  }
-
-  handleChange(event) {
-  }
-
-  handleSubmit(event) {
-    event.preventDefault();
-  }
+   }
 
 
   render() {
-    const { notLoggedIn } = this.state;
+    const { notLoggedIn, showResults, reasoning, restaurant } = this.state;
 
     if (notLoggedIn) {
       return (
@@ -140,14 +149,14 @@ class App extends React.Component {
           User Not Found, Please Log In -- Implement Authentication [TO DO]
         </div>
       )
-    } else {
+    } else if (!showResults){
       return (
         <div className='container'>
           <Clock type='digital'></Clock>
           <Grid
             justify = 'center'
             justifyContent = 'center'
-            rows={['xxsmall', 'xxsmall', 'xxsmall', 'xxsmall', 'medium', 'small']  }
+            rows={['xxsmall', 'xxsmall', 'xxsmall', 'xxsmall', 'small', 'small']  }
             columns={['medium', 'small']}
             gap="xxsmall"
             areas={[
@@ -199,23 +208,24 @@ class App extends React.Component {
               </button>
             </Box>
 
-          </Grid>
-  
-          
-  
-          
-  
-  
-          {/* This could be conditionally rendered once the search is hit */}
-          <div>
-            {/* Suggested Restaurant */}
-            RESULTS:
-          </div>
-  
-  
+          </Grid> 
         </div>
       )
-
+    } else if (showResults) {
+      return (
+        <div>
+          <div>
+            <Clock type='digital'></Clock>
+          </div>
+          <div>
+            <button onClick={this.changePage}>Home</button>
+          </div>
+          <div>
+            Currently In The Mood For: {reasoning}
+            <Results restaurant={restaurant} ></Results>
+          </div>
+        </div>
+      )
     }
 
     
