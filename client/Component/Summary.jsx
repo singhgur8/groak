@@ -27,9 +27,9 @@ function Summary(props){
 
                     {/* cthis needs to go inside of summary item */}
 
-                    <Box gridArea='range'>
+                    {/* <Box gridArea='range'>
                         <RangeInput></RangeInput>
-                    </Box>
+                    </Box> */}
 
                 </Grid>
         </div>
