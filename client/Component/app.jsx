@@ -3,17 +3,23 @@ import axios from 'axios';
 import styles from './styles/app.css';
 import AddGuest from './AddGuest.jsx'
 import Search from './Search.jsx'
+import Summary from './Summary.jsx'
+import { Home, User, Help, FormSearch } from 'grommet-icons';
+import { RangeInput, Clock, Grid, Box } from 'grommet'
 
 
 class App extends React.Component {
   constructor() {
     super();
     this.state = {
+      username: 'Gurjot',
       show: {
         guestStatement: false,
       },
-      value: 'coconut'
+      friends: [],
+      selectedFriends: [],
     };
+
 
     this.addEater = this.addEater.bind(this);
     this.addGuest = this.addGuest.bind(this);
@@ -37,6 +43,32 @@ class App extends React.Component {
     }
 
     navigator.geolocation.getCurrentPosition(sucesscb, errorcb)
+
+    // also when this loads, it shoudl send over all of the details andfriends of the current 
+    // user over search bar. The list of options eventually needs to be an array of objects
+    // with label and value keys, whenever someone is selected, disabled gets turned on
+    // this data processing will have to happen somewhere. better to do it on server end
+
+    // based on endpoint, it can be a show of who is logged in right now.
+    // defaults to me
+    var user = window.location.pathname;
+    // if the input in nothing then default to /vel_animi_tempora/
+    if ( window.location.pathname === '/') {
+      user = '/gurjot_singh/'
+    }
+
+    // update user name in account tab in nav bar
+    var username = user.slice(1,user.length-1).split("_").join(" ")
+    this.setState({username})
+
+    axios.get(`${user}friends`)
+    .then((data) => {
+      this.setState({
+        friends: data.data.friends
+      })
+    })
+    .catch()
+
   }
 
 
@@ -48,34 +80,44 @@ class App extends React.Component {
     // needs a close button and a createEater button
   }
 
-  // add eater submit
   addEater(username){
     console.log('Adding a Eater', username)
+    if (username === null || username === undefined) {
+      this.setState({
+        show: {
+          guestStatement: true
+        }
+      })
+    }
 
-    // this needs to get whatever is put into the form
+      axios.post('/addEater', {username: username.label})
+      .then(() => {
+        // push user into selected friends array
+        const selectedFriends = this.state.selectedFriends.slice();
+        selectedFriends.push(username.label)
+        this.setState({
+          selectedFriends: selectedFriends
+        });
+      }) 
+      //update the state so the username  also appears in in the next component
+      // for the selected friends i should add a disable true property to the friends list
+      // might as well update both states together
 
-    // run this if the add eater fails
-    this.setState({
-      show: {
-        guestStatement: true
-      }
-    })
   }
 
-  // find restaurant
   findRestaurant(e){
     e.preventDefault();
     axios.get('/restaurant', {
 
     })
+    // This should also display why this restaurant was chosen, like what was
+    // the filter based on. Most people want:
   }
 
   handleChange(event) {
-    this.setState({value: event.target.value});
   }
 
   handleSubmit(event) {
-    alert('Your favorite flavor is: ' + this.state.value);
     event.preventDefault();
   }
 
@@ -91,56 +133,73 @@ class App extends React.Component {
     // }
 
     return (
-      <div>
-        {/* Logo and Mission Statement */}
-        <div>
-          <h1>GROAK</h1>
-          <p>Enchancing your food searching experience since 2020!</p>
-        </div>
+      <div className='container'>
+        <Grid
+          justify = 'center'
+          justifyContent = 'center'
+          rows={['xxsmall', 'xxsmall', 'xxsmall', 'small']  }
+          columns={['medium', 'small']}
+          gap="xxsmall"
+          areas={[
+            { name: 'header', start: [0, 0], end: [1, 0] },
+            { name: 'nav', start: [0, 1], end: [1, 1] },
+            { name: 'search', start: [0, 2], end: [1, 2] },
+            { name: 'addGuest', start: [0, 3], end: [1, 3] },
+          ]}
+        >
+          <Box gridArea='header'>
+            <div>
+              <h1>GROAK</h1>
+              <p>Enchancing your food searching experience since 2020!</p>
+            </div>
+          </Box>
 
-          {/* navigation bar */}
-        <div>
-          <button>Home</button>
-          <button>About</button>
-          <button>Sign In</button>
-        </div>
+          <Box gridArea='nav'>
+            <div>
+              <button><Home size='small'></Home></button>
+              <button><Help size='small'></Help></button>
+              <button><User size='small'></User> {this.state.username}</button>
+            </div>
+          </Box>
+{/* the add button is inside this so i have to make a grid inside this as well */}
+          <Box gridArea='search'>
+            <div>
+              <Search addEater={this.addEater} friends={this.state.friends} selectedFriends={this.state.selectedFriends}></Search>
+            </div>
+          </Box>
 
-        {/* Search Bar */}
-        <div>
-          <Search addEater={this.addEater}></Search>
-        </div>
+          <Box gridArea='addGuest'>
+            <div>
+              <AddGuest addGuest={this.addGuest} show={this.state.show}/>
+            </div>
+          </Box>
 
-        <div>
-          <AddGuest addGuest={this.addGuest} show={this.state.show}/>
-        </div>
+        </Grid>
+
 
         <div>
           {/* add a Selection Summary Component here */}
+          <Summary selectedFriends={this.state.selectedFriends} />
+          <RangeInput/>
+        </div>
+
+        <div>
+          <button>
+            <div>Find Restaurant!</div>
+            <FormSearch></FormSearch>
+          </button>
         </div>
 
         {/* This could be conditionally rendered once the search is hit */}
         <div>
           {/* Suggested Restaurant */}
+          RESULTS:
         </div>
+
+        <Clock type='digital'></Clock>
 
       </div>
     )
-
-
-    // if (show.gallery) {
-    //   return (
-    //     <div>
-    //       Hello World
-    //       {/* <Gallery info={photos} onClick={this.changePage} /> */}
-    //     </div>
-    //   );
-    // }
-    // return (
-    //   // className={styles.CarouselPage}
-    //   <div >
-    //     {/* <CarouselPage onClick={this.changePage} info={photos} showPhoto={show} /> */}
-    //   </div>
-    // );
   }
 }
 

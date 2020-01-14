@@ -13,15 +13,15 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
 app.use('/', express.static(path.join(__dirname, '../public')));
-// app.use('/:id', express.static(path.join(__dirname, '../public')));
+app.use('/:user', express.static(path.join(__dirname, '../public')));
 // app.use('/bundle.js', express.static(path.join(__dirname, '../public/bundle.js')));
   
 app.post('/coordinates', (req, res) => {
   controller.setLocation(req, res)
 })
 
-app.post('/addFriend', (req,res) => {
-  controller.addFriend(req,res)
+app.post('/addEater', (req,res) => {
+  controller.addEater(req,res)
 })
 
 app.post('createFriend', (req,res) => {
@@ -30,6 +30,10 @@ app.post('createFriend', (req,res) => {
 
 app.get('/restaurant', (req,res)=>{
   controller.getRestaurant(req,res)
+})
+
+app.get('/:user/friends', (req,res) => {
+  controller.getUserInfo(req,res)
 })
 
 app.listen(port, () => {
